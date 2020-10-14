@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <%= favicon_link_tag asset_path('ms-icon-310x310.png') %>
+    <title>
+      React at the Railway
+    </title>
+    <%= csrf_meta_tag %>
+    <%= yield :head %>
+  </head>
+  <body class="<%= content_for(:body_classes) %>">
+    <%= yield %>
+    <%= javascript_pack_tag 'railway' %>
+    <%= content_for(:javascripts) %>
+  </body>
+</html>
