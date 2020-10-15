@@ -46,6 +46,10 @@ group :development do
   gem 'capistrano-nvm', require: false
   gem 'capistrano-bundler', '~> 2.0', require: false
   gem 'capistrano3-puma', require: false
+  gem 'capistrano-passenger', '~> 0.2.0'
+  gem 'capistrano3-unicorn'
+  gem 'ed25519',  '~> 1.2.4'
+  gem 'bcrypt_pbkdf'
 end
 
 group :test do
