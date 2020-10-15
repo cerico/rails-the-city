@@ -59,9 +59,9 @@
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
-set :pg_password, ENV['DATABASE_PASSWORD']
+#set :pg_password, ENV['DATABASE_PASSWORD']
 
-set :pg_ask_for_password, true
+#set :pg_ask_for_password, true
 
 set :ssh_options, {
   keys: %w(~/.ssh/deploy),
