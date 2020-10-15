@@ -10,7 +10,6 @@ class CountersController < ApplicationController
   end
 
   def railway
-    @counter = CounterSerializer.new(Counter.first, root: false)
     @cities = cities
     @google_streetview_key = Rails.application.credentials.google[:streetview_key]
   end
