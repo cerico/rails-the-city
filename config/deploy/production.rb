@@ -66,5 +66,4 @@ set :ssh_options, {
   user: "deploy",
   auth_methods: %w(publickey)
 }
-set :branch, 'main'
 server 'leaves.larchtre.es', user: 'deploy', roles: %w{app db web}
