@@ -48,6 +48,7 @@ group :development do
   gem 'capistrano3-puma', require: false
   gem 'capistrano-passenger', '~> 0.2.0'
   gem 'capistrano3-unicorn'
+  gem 'capistrano-postgresql'
   gem 'ed25519',  '~> 1.2.4'
   gem 'bcrypt_pbkdf'
 end
