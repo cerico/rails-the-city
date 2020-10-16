@@ -1,5 +1,5 @@
 {
-  "name": "Railway",
+  "name": "rails-streetview",
   "scripts": {
     "test": "jest",
     "dev-test": "jest --watch --notify",
