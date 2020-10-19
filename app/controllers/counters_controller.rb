@@ -11,7 +11,7 @@ class CountersController < ApplicationController
 
   def railway
     @cities = cities
-    @google_streetview_key = Rails.application.credentials.google[:streetview_key]
+    @google_streetview_key = Rails.application.credentials.dig(:gooegle,:streetview_key)
   end
 
   # GET /counters/1
