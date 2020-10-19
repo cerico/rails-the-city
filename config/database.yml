@@ -82,3 +82,4 @@ production:
   <<: *default
   database: rails_city_production
   username: rails_city
+  password: <%= Rails.application.credentials.production[:db_password] %>
