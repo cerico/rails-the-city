@@ -87,3 +87,4 @@ production:
   password: <%= Rails.application.credentials.production[:db_password] %>
   password: <%= Rails.application.credentials.production[:db_password] %>
   password: <%= Rails.application.credentials.production[:db_password] %>
+  password: <%= Rails.application.credentials.production[:db_password] %>
