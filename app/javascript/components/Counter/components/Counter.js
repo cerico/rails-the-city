@@ -11,15 +11,14 @@ const radius = {
   lax: 1000
 }
 
-const locator = (origin, radius) => {
+const locator = (origin) => {
+  const radius = 0.25
   const xOffset = random(-radius, radius)
   const yOffset = random(-radius,radius)
   return {lat: origin.lat + xOffset, lng: origin.lng + yOffset}
 }
 
-const fixedLocation = {lat: 40.45935, lng: 22.944607}
-
-const randomLocation = (radius) => locator(fixedLocation, radius)
+const randomLocation = (city) => locator(city)
 
 const containerStyle = {
   flex: '1',
@@ -58,7 +57,8 @@ function Map(props) {
   }
 
   const getPanorama = (streetViewService, radius, preference) => {
-    const location = randomLocation(radius)
+    const city = props.cities[parseInt(random(0, props.cities.length))]
+    const location = randomLocation(city, radius)
     streetViewService.getPanorama({
       location: location,
       radius: radius,
