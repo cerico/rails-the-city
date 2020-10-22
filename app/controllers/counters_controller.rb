@@ -897,7 +897,7 @@ class CountersController < ApplicationController
           "lng": 8.539182499999999
       },
       {
-          "name": "Simferopol', Crimea, Ukraine, 95000",
+          "name": "Simferopol, Crimea, Ukraine, 95000",
           "lat": 44.952117,
           "lng": 34.102417
       },
@@ -977,7 +977,7 @@ class CountersController < ApplicationController
           "lng": -3.17909
       },
       {
-          "name": "Braşov, Romania",
+          "name": "Brasov, Romania",
           "lat": 45.655651,
           "lng": 25.6108
       },
