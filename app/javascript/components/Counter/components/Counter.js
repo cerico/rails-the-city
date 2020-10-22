@@ -7,6 +7,8 @@ const random = (min, max) => (
   Math.random() * (max - min) + min
 )
 
+const guessed = []
+
 const radius = {
   stringent: 50,
   lax: 1000
@@ -53,10 +55,22 @@ function Map(props) {
   const [position, setPosition] = React.useState(null);
   const [city, setCity] = React.useState(null)
   const [streetViewService, setstreetViewService] = React.useState(null)
+  const [answer, setAnswer] = React.useState({name:''})
+  const [answers, setAnswers] = React.useState([])
   const [timer, setTimer] = React.useState(9);
+
+  const getCity = (cities) => {
+    const candidate = cities[parseInt(random(0, cities.length))]
+    const shortName = candidate.name.substring(0, candidate.name.indexOf(","));
+    const city = ({ name: shortName.toLowerCase() })
+    setAnswer(city)
+    setAnswers(answers => [...answers, city]);
+    return candidate
+  }
 
   const processStreetViewData = (data, status, streetViewService, city) => {
     if (status === "OK") {
+      guessed.push(city)
       const position = {lat: data.location.latLng.lat(), lng: data.location.latLng.lng()}
       setPosition(position)
     } else {
@@ -73,8 +87,8 @@ function Map(props) {
   }
 
   const next = (streetViewService) => {
-    const city = props.cities[parseInt(random(0, props.cities.length))]
     startTimer(16, streetViewService)
+    const city = getCity(props.cities)
     getPanorama(streetViewService, city, radius.stringent, 'best')
   }
 
@@ -101,8 +115,8 @@ function Map(props) {
   }
 
   const onLoad = (streetViewService) => {
-    const city = props.cities[parseInt(random(0, props.cities.length))]
     startTimer(timer, streetViewService)
+    const city = getCity(props.cities)
     getPanorama(streetViewService, city, radius.stringent, 'best')
   }
 
@@ -117,7 +131,15 @@ function Map(props) {
           options={streetViewOptions}
         />
       </GoogleMap>
-      <Below>{formatClock(timer)}</Below>
+      <Below>
+        <div className="timer">{formatClock(timer)}</div>
+        <div className="answer">{answer.name}</div>
+        <div>{answers.map(entry =>
+          <div key={entry.name}>{entry.name}</div>
+        )}
+        </div>
+
+      </Below>
     </LoadScript>
     </div>
   );

@@ -832,7 +832,7 @@ class CountersController < ApplicationController
           "lng": -2.9234409
       },
       {
-          "name": "Sevastopol', Sevastopol' city, Ukraine, 99000",
+          "name": "Sevastopol, Sevastopol' city, Ukraine, 99000",
           "lat": 44.61665,
           "lng": 33.525367
       },
