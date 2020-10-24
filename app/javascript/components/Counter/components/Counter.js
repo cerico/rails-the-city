@@ -55,17 +55,48 @@ function Map(props) {
   const [position, setPosition] = React.useState(null);
   const [city, setCity] = React.useState(null)
   const [streetViewService, setstreetViewService] = React.useState(null)
-  const [answer, setAnswer] = React.useState({name:''})
+  const [answer, setAnswer] = React.useState('')
   const [answers, setAnswers] = React.useState([])
-  const [timer, setTimer] = React.useState(9);
+  const [cities, setCities] = React.useState([])
+  const [timer, setTimer] = React.useState(16);
+  const [svs, setSvs] = React.useState(null);
+  const [correct, setCorrect] = React.useState(false);
 
-  const getCity = (cities) => {
-    const candidate = cities[parseInt(random(0, cities.length))]
+  React.useEffect(() => {
+    let interval = null;
+    if (correct || timer < 1) {
+      setTimer(16)
+      setAnswers(answers => [...answers, city.shortName]);
+      setCorrect(false)
+      console.log(answers.length, cities.length)
+      next(svs)
+    } else {
+      interval = setInterval(() => {
+        setTimer(timer => timer - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+   }, [answer, city, answers, svs, timer, position, cities, correct]);
+
+  const [inputValue, setInputValue] = React.useState("");
+
+  const onChangeHandler = (event, svs) => {
+    if (event.target.value === city.shortName) {
+      setCorrect(true)
+      setAnswer(city.shortName)
+      return setInputValue('');
+    }
+    setInputValue(event.target.value);
+  };
+
+  const getCity = (cs) => {
+    const candidate = cs[parseInt(random(0, cs.length))]
+    let filteredArray = cities.filter(item => item !== candidate)
+    // setCities(filteredArray)
     const shortName = candidate.name.substring(0, candidate.name.indexOf(","));
-    const city = ({ name: shortName.toLowerCase() })
-    setAnswer(city)
-    setAnswers(answers => [...answers, city]);
-    return candidate
+    const city = ({ ...candidate, shortName: shortName.toLowerCase() })
+    setCity(city)
+    return city
   }
 
   const processStreetViewData = (data, status, streetViewService, city) => {
@@ -86,10 +117,11 @@ function Map(props) {
     return `${minutes}:${seconds}`
   }
 
-  const next = (streetViewService) => {
-    startTimer(16, streetViewService)
-    const city = getCity(props.cities)
-    getPanorama(streetViewService, city, radius.stringent, 'best')
+  function next(streetViewService) {
+    console.log(answers.length)
+    setAnswer(city)
+    const newCity = getCity(props.cities)
+    getPanorama(streetViewService, newCity, radius.stringent, 'best')
   }
 
   const startTimer = (t,streetViewService) => {
@@ -115,7 +147,9 @@ function Map(props) {
   }
 
   const onLoad = (streetViewService) => {
-    startTimer(timer, streetViewService)
+    setSvs(streetViewService);
+    // startTimer(timer, streetViewService)
+    setCities(props.cities);
     const city = getCity(props.cities)
     getPanorama(streetViewService, city, radius.stringent, 'best')
   }
@@ -133,12 +167,17 @@ function Map(props) {
       </GoogleMap>
       <Below>
         <div className="timer">{formatClock(timer)}</div>
-        <div className="answer">{answer.name}</div>
+        <input
+          type="text"
+          name="name"
+          onChange={(e)=> onChangeHandler(e, svs)}
+          value={inputValue}
+        />
         <div>{answers.map(entry =>
-          <div key={entry.name}>{entry.name}</div>
+          <div key={entry}>{entry}</div>
         )}
         </div>
-
+      
       </Below>
     </LoadScript>
     </div>
