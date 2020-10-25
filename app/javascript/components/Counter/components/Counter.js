@@ -175,20 +175,20 @@ const Map = (props) => {
           options={streetViewOptions}
         />
       </GoogleMap>
-      <Below>
-        <div className="timer">{playing && formatClock(timer)}</div>
+      {playing && <Below>
+        <div className="timer">formatClock(timer)}</div>
         <input
           type="text"
           name="name"
           onChange={(e)=> onChangeHandler(e, svs)}
           value={inputValue}
         />
-        <div>{answers.map(entry =>
+      </Below>}
+      <div>{answers.map(entry =>
           <div key={entry.name}>{entry.name} - {entry.score}</div>
         )}
         </div>
         <div>{totalScore}</div>
-      </Below>
     </LoadScript>
     </div>
   );
