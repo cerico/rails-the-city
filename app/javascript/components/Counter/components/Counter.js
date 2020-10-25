@@ -87,7 +87,7 @@ const Map = (props) => {
       setScore(null)
       const newCity = getCity(cities)
       setCity(newCity)
-      if (answers.length < 2) {
+      if (answers.length < 8) {
         console.log(answers.length)
         next()
       }
@@ -96,7 +96,7 @@ const Map = (props) => {
         setTimer(timer => timer - 1);
       }, 1000);
     }
-    if (answers.length === 3) {
+    if (answers.length === 10) {
       setPlaying(false)
       return clearInterval(interval)
     }
