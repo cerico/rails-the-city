@@ -176,7 +176,7 @@ const Map = (props) => {
         />
       </GoogleMap>
       {playing && <Below>
-        <div className="timer">formatClock(timer)}</div>
+        <div className="timer">formatClock(timer)</div>
         <input
           type="text"
           name="name"
