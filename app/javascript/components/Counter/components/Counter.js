@@ -87,7 +87,7 @@ const Map = (props) => {
       setScore(null)
       const newCity = getCity(cities)
       setCity(newCity)
-      if (answers.length < 8) {
+      if (answers.length < 9) {
         console.log(answers.length)
         next()
       }
