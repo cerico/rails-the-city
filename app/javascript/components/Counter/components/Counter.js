@@ -207,7 +207,7 @@ const Map = (props) => {
           <div>{totalScore}</div>
         </div>
         <div>
-          <button onClick={() => resetTimer()}>Skip</button>
+          {playing && <button onClick={() => resetTimer()}>Skip</button>}
           <div>{scores.map(s => <div key={s.id}>{s.value}</div>)}</div>
         </div>
       </Scores>
