@@ -79,9 +79,9 @@ ssh $user@$server -i $key << EOF
   fi
 EOF
 ssh -q $user@$server -i $key  "[[ -f $remote_app_location/$app_name/config/master.key ]]"
-retVal=$?
+retVal=\$?
 echo $retVal
-if [ $retVal -eq 0 ]; then
+if [ \$retVal -eq 0 ]; then
   echo "Done!"
   exit
 fi

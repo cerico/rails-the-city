@@ -1,6 +1,6 @@
 source config/elista.env
 
-ssh deploy@larchtre.es -i /Users/gareth/.ssh/deploy << EOF
+ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
   cd /var/www/html
   echo rails_city
   bash -i
@@ -37,21 +37,21 @@ ssh deploy@larchtre.es -i /Users/gareth/.ssh/deploy << EOF
     fi
   fi
 EOF
-ssh -q deploy@larchtre.es -i /Users/gareth/.ssh/deploy  "[[ -f /var/www/html/rails_city/config/master.key ]]"
-retVal=0
+ssh -q deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy  "[[ -f /var/www/html/rails_city/config/master.key ]]"
+retVal=$?
 echo 
-if [  -eq 0 ]; then
+if [ $retVal -eq 0 ]; then
   echo "Done!"
   exit
 fi
 ls
-sftp -i /Users/gareth/.ssh/deploy deploy@larchtre.es << EOF
+sftp -i /Users/gareth/.ssh/deploy deploy@sv.larchtre.es << EOF
   cd /var/www/html/rails_city/config
   mput config/master.key
   cd /etc/nginx/conf.d
   mput config/nginx/*
 EOF
-ssh deploy@larchtre.es -i /Users/gareth/.ssh/deploy << EOF
+ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
   bash -i
   cd /var/www/html/rails_city
   password=`echo 'Rails.application.credentials.production[:db_password]' | RAILS_ENV=production bundle exec rails c | tail -2 | head -1 | tr -d '"'`
