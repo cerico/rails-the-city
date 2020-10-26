@@ -101,7 +101,6 @@ const Map = (props) => {
       setCorrect(false)
       setScore(null)
       setTimer(100)
-      setDouble(false)
     } else {
       interval = setInterval(() => {
         setTimer(timer => timer - 1);
@@ -148,6 +147,7 @@ const Map = (props) => {
     if (status === "OK") {
       const position = {lat: data.location.latLng.lat(), lng: data.location.latLng.lng()}
       setPosition(position)
+      setDouble(false)
     } else {
       getPanorama(city, radius.lax, 'nearest')
     }
