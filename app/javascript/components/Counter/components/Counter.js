@@ -71,6 +71,7 @@ const Map = (props) => {
   const [playing, setPlaying] = React.useState(true)
   const [inputValue, setInputValue] = React.useState("")
   const [scores, setScores] = React.useState([])
+  const [double, setDouble] = React.useState(false);
 
   const calcScore = (t) => (
     t > 135 ? 100 : parseInt(t / 1.35)
@@ -100,6 +101,7 @@ const Map = (props) => {
       setCorrect(false)
       setScore(null)
       setTimer(100)
+      setDouble(false)
     } else {
       interval = setInterval(() => {
         setTimer(timer => timer - 1);
@@ -207,7 +209,15 @@ const Map = (props) => {
           <div>{totalScore}</div>
         </div>
         <div>
-          {playing && <button onClick={() => resetTimer()}>Skip</button>}
+          {playing && (
+            <button
+              disabled={double}
+              onClick={() => {
+                resetTimer()
+                setDouble(true);
+              }}
+              >Skip</button>
+          )}
           <div>{scores.map(s => <div key={s.id}>{s.value}</div>)}</div>
         </div>
       </Scores>
