@@ -4,8 +4,8 @@ class Api::V1::CountersController < ApplicationController
   end
 
   def update
-    counter = Counter.find_by(name: counter_params[:name])
-    counter.update({ value: counter_params[:value] })
+    counter = Counter.create!(name: counter_params[:name], value: counter_params[:value])
+    # counter.update({ value: counter_params[:value] })
     render json: counter
   end
 

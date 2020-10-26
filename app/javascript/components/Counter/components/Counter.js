@@ -2,17 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components'
 import { GoogleMap, LoadScript, StreetViewPanorama, StreetViewService } from '@react-google-maps/api';
-import { END } from 'redux-saga';
+import { increment } from './api'
 
 const random = (min, max) => (
   Math.random() * (max - min) + min
 )
 
-const guessed = []
-
 const radius = {
-  stringent: 50,
-  lax: 1000
+  stringent: 100,
+  lax: 500
 }
 
 const locator = (origin) => {
@@ -31,6 +29,13 @@ const containerStyle = {
 
 const Below = styled.div`
   font-size: 44px;
+`
+
+const Scores = styled.div`
+  display: flex;
+  div {
+    flex: 1
+  }
 `
 
 const streetViewOptions = {
@@ -58,38 +63,52 @@ const Map = (props) => {
   const [answer, setAnswer] = React.useState({})
   const [answers, setAnswers] = React.useState([])
   const [cities, setCities] = React.useState([])
-  const [timer, setTimer] = React.useState(8);
+  const [timer, setTimer] = React.useState(10);
   const [svs, setSvs] = React.useState(null);
   const [correct, setCorrect] = React.useState(false)
   const [score, setScore] = React.useState(null)
   const [totalScore, setTotalScore] = React.useState(null)
   const [playing, setPlaying] = React.useState(true)
   const [inputValue, setInputValue] = React.useState("")
+  const [scores, setScores] = React.useState([])
 
   const calcScore = (t) => (
     t > 135 ? 100 : parseInt(t / 1.35)
   )
 
   React.useEffect(() => {
-    if (svs) {
-      console.log(svs)
-      next()
+    if (scores) {
+      console.log(scores)
     }
-  }, [svs])
+  }, [scores])
 
+  React.useEffect(() => {
+    if (cities.length > 0) {
+      setCity(getCity(cities))
+    }
+  }, [cities])
+
+  React.useEffect(() => {
+    if (city) {
+      getPanorama(city, radius.stringent, 'best')
+    }
+  }, [city])
+
+  React.useEffect(() => {
+    console.log(answers.length)
+  }, [answers])
 
   React.useEffect(() => {
     let interval = null;
     if (correct || timer < 1) {
-      setTimer(8)
+      setTimer(10)
       setAnswers(answers => [...answers, {name: city.shortName, score: score || 0}]);
+      setTotalScore(totalScore + score)
       setCorrect(false)
       setScore(null)
-      const newCity = getCity(cities)
-      setCity(newCity)
       if (answers.length < 9) {
-        console.log(answers.length)
-        next()
+        let filteredArray = cities.filter(item => item.namem !== city.name)
+        setCities(filteredArray)
       }
     } else {
       interval = setInterval(() => {
@@ -98,6 +117,8 @@ const Map = (props) => {
     }
     if (answers.length === 10) {
       setPlaying(false)
+      console.log(totalScore)
+      increment(totalScore)
       return clearInterval(interval)
     }
     return () => clearInterval(interval);
@@ -108,29 +129,24 @@ const Map = (props) => {
       setCorrect(true)
       const roundScore = calcScore(timer)
       setScore(roundScore)
-      setTotalScore(totalScore + roundScore)
       return setInputValue('');
     }
     setInputValue(event.target.value);
   };
 
+
   const getCity = (cs) => {
     const candidate = cs[parseInt(random(0, cs.length))]
-    let filteredArray = cs.filter(item => item !== candidate)
-    setCities(filteredArray)
     const shortName = candidate.name.substring(0, candidate.name.indexOf(","));
-    const city = ({ ...candidate, shortName: shortName.toLowerCase() })
-    setCity(city)
-    return city
+    return ({ ...candidate, shortName: shortName.toLowerCase() })
   }
 
-  const processStreetViewData = (data, status) => {
-    console.log(status)
+  const processStreetViewData = (city, data, status) => {
     if (status === "OK") {
       const position = {lat: data.location.latLng.lat(), lng: data.location.latLng.lng()}
       setPosition(position)
     } else {
-      getPanorama(radius.lax, 'nearest')
+      getPanorama(city, radius.lax, 'nearest')
     }
   }
 
@@ -142,26 +158,22 @@ const Map = (props) => {
     return `${minutes}:${seconds}`
   }
 
-  const next = () => {
-    getPanorama(radius.stringent, 'best')
-  }
-
-  const getPanorama = (radius, preference) => {
+  const getPanorama = (city, radius, preference) => {
     const location = randomLocation(city, radius)
     svs.getPanorama({
       location: location,
       radius: radius,
       preference: preference,
     }, (data, status ) => {
-      processStreetViewData(data, status)
+      processStreetViewData(city, data, status)
     })
   }
 
   const onLoad = (streetViewService) => {
+    console.log(props)
     setSvs(streetViewService);
+    setScores(props.scores)
     setCities(props.cities);
-    const city = getCity(props.cities)
-    setCity(city)
   }
 
   return (
@@ -184,11 +196,16 @@ const Map = (props) => {
           value={inputValue}
         />
       </Below>}
-      <div>{answers.map(entry =>
-          <div key={entry.name}>{entry.name} - {entry.score}</div>
-        )}
+      <Scores>
+        <div>
+          <div>{answers.map(entry =>
+            <div key={entry.name}>{entry.name} - {entry.score}</div>
+          )}
+          </div>
+          <div>{totalScore}</div>
         </div>
-        <div>{totalScore}</div>
+        <div>{scores.map(s => <div key={s.id}>{s.value}</div>)}</div>
+      </Scores>
     </LoadScript>
     </div>
   );

@@ -12,6 +12,7 @@ class CountersController < ApplicationController
   def railway
     @cities = cities
     @google_streetview_key = Rails.application.credentials.dig(:google,:streetview_key)
+    @scores = ActiveModel::Serializer::CollectionSerializer.new(Counter.all&.order(value: :desc).limit(10), each_serializer: CounterSerializer)
   end
 
   # GET /counters/1
