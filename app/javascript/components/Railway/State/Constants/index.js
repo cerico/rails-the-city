@@ -1,8 +1,0 @@
-const constants = {
-  FETCH_IN_PROGRESS: 'FETCH_IN_PROGRESS',
-  FETCH_SUCCESS: 'FETCH_SUCCESS',
-  FETCH_FAILED: 'FETCH_FAILED',
-  SET_PAGE_STATE: 'SET_PAGE_STATE',
-}
-
-export default constants
