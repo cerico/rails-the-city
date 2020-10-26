@@ -91,15 +91,15 @@ const Map = (props) => {
   React.useEffect(() => {
     let interval = null;
     if (correct || timer < 1) {
-      setTimer(100)
-      setAnswers(answers => [...answers, {name: city.shortName, score: score || 0}]);
-      setTotalScore(totalScore + score)
-      setCorrect(false)
-      setScore(null)
       if (answers.length < 9) {
         let filteredArray = cities.filter(item => item.name !== city.name)
         setCities(filteredArray)
       }
+      setAnswers(answers => [...answers, {name: city.shortName, score: score || 0}]);
+      setTotalScore(totalScore + score)
+      setCorrect(false)
+      setScore(null)
+      setTimer(100)
     } else {
       interval = setInterval(() => {
         setTimer(timer => timer - 1);
@@ -170,6 +170,8 @@ const Map = (props) => {
     })
   }
 
+  const resetTimer = () => (setTimer(0)) 
+
   const onLoad = (streetViewService) => {
     setSvs(streetViewService);
     setScores(props.scores)
@@ -204,7 +206,10 @@ const Map = (props) => {
           </div>
           <div>{totalScore}</div>
         </div>
-        <div>{scores.map(s => <div key={s.id}>{s.value}</div>)}</div>
+        <div>
+          <button onClick={() => resetTimer()}>Skip</button>
+          <div>{scores.map(s => <div key={s.id}>{s.value}</div>)}</div>
+        </div>
       </Scores>
     </LoadScript>
     </div>
