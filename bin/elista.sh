@@ -23,7 +23,7 @@ ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
     bundle update
     RAILS_ENV=production bundle install
     yarn install --check-files
-    ./bin/webpack
+    ./bin/webpack --mode production
     RAILS_ENV=production bundle exec rake db:migrate
   else
     git clone https://github.com/cerico/rails-the-city.git rails_city
@@ -62,7 +62,7 @@ ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
   spring stop
   yarn install --check-files
   ls bin
-  ./bin/webpack
+  ./bin/webpack --mode production
   RAILS_ENV=production bundle exec rake db:create
   RAILS_ENV=production bundle exec rake db:migrate
   RAILS_ENV=production bundle exec rake db:seed
