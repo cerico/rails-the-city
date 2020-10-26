@@ -67,6 +67,7 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
+    bcrypt_pbkdf (1.0.1)
     bindex (0.8.1)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
@@ -90,6 +91,7 @@ GEM
     connection_pool (2.2.3)
     crass (1.0.6)
     debug_inspector (0.0.3)
+    ed25519 (1.2.4)
     erubi (1.9.0)
     execjs (2.7.0)
     ffi (1.13.1)
@@ -237,9 +239,11 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  bcrypt_pbkdf
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
+  ed25519 (~> 1.2.4)
   jbuilder (~> 2.7)
   listen (~> 3.2)
   pg (>= 0.18, < 2.0)
