@@ -1,4 +1,4 @@
-const apiBase = window.location.href
+export const apiBase = window.location.href
 
 function headers() {
     return new Headers({
@@ -25,7 +25,8 @@ export async function increment(counter) {
       const response = await makePostRequest(endpoint, data)
       const result = await response.json()
       try {
-        console.log(result)
+          console.log(result)
+        return result
         // dispatch({ type: 'INCREMENT', result})
       } catch (error) {
         console.log(error)

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components'
 import { GoogleMap, LoadScript, StreetViewPanorama, StreetViewService } from '@react-google-maps/api';
-import { increment } from './api'
+import { apiBase, makePostRequest } from './api'
 
 const random = (min, max) => (
   Math.random() * (max - min) + min
@@ -63,7 +63,7 @@ const Map = (props) => {
   const [answer, setAnswer] = React.useState({})
   const [answers, setAnswers] = React.useState([])
   const [cities, setCities] = React.useState([])
-  const [timer, setTimer] = React.useState(10);
+  const [timer, setTimer] = React.useState(100);
   const [svs, setSvs] = React.useState(null);
   const [correct, setCorrect] = React.useState(false)
   const [score, setScore] = React.useState(null)
@@ -75,12 +75,6 @@ const Map = (props) => {
   const calcScore = (t) => (
     t > 135 ? 100 : parseInt(t / 1.35)
   )
-
-  React.useEffect(() => {
-    if (scores) {
-      console.log(scores)
-    }
-  }, [scores])
 
   React.useEffect(() => {
     if (cities.length > 0) {
@@ -95,19 +89,15 @@ const Map = (props) => {
   }, [city])
 
   React.useEffect(() => {
-    console.log(answers.length)
-  }, [answers])
-
-  React.useEffect(() => {
     let interval = null;
     if (correct || timer < 1) {
-      setTimer(10)
+      setTimer(100)
       setAnswers(answers => [...answers, {name: city.shortName, score: score || 0}]);
       setTotalScore(totalScore + score)
       setCorrect(false)
       setScore(null)
       if (answers.length < 9) {
-        let filteredArray = cities.filter(item => item.namem !== city.name)
+        let filteredArray = cities.filter(item => item.name !== city.name)
         setCities(filteredArray)
       }
     } else {
@@ -117,7 +107,18 @@ const Map = (props) => {
     }
     if (answers.length === 10) {
       setPlaying(false)
-      console.log(totalScore)
+      async function increment(counter) {
+        const data = { name: 'anonymous', value: counter }
+        const endpoint = `${apiBase}/api/v1/counters/update`
+        const response = await makePostRequest(endpoint, data)
+        const result = await response.json()
+        try {
+          const newScores = [ ...scores, result].sort((a, b) => b.value - a.value).slice(0,10)
+          setScores(newScores)
+        } catch (error) {
+          console.log(error)
+        }
+      }
       increment(totalScore)
       return clearInterval(interval)
     }
@@ -170,7 +171,6 @@ const Map = (props) => {
   }
 
   const onLoad = (streetViewService) => {
-    console.log(props)
     setSvs(streetViewService);
     setScores(props.scores)
     setCities(props.cities);
