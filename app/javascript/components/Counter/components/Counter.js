@@ -63,7 +63,7 @@ const Map = (props) => {
   const [answer, setAnswer] = React.useState({})
   const [answers, setAnswers] = React.useState([])
   const [cities, setCities] = React.useState([])
-  const [timer, setTimer] = React.useState(160);
+  const [timer, setTimer] = React.useState(150);
   const [svs, setSvs] = React.useState(null);
   const [correct, setCorrect] = React.useState(false)
   const [score, setScore] = React.useState(null)
@@ -105,7 +105,7 @@ const Map = (props) => {
       setTotalScore(totalScore + score)
       setCorrect(false)
       setScore(null)
-      resetTimer(160)
+      resetTimer(150)
     } else {
       interval = setInterval(() => {
         setTimer(timer => timer - 1);
