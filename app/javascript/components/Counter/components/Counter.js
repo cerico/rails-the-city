@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components'
 import { GoogleMap, LoadScript, StreetViewPanorama, StreetViewService } from '@react-google-maps/api';
-import { apiBase, makePostRequest } from './api'
+import useResults from './api'
 
 const random = (min, max) => (
   Math.random() * (max - min) + min
@@ -63,7 +63,7 @@ const Map = (props) => {
   const [answer, setAnswer] = React.useState({})
   const [answers, setAnswers] = React.useState([])
   const [cities, setCities] = React.useState([])
-  const [timer, setTimer] = React.useState(100);
+  const [timer, setTimer] = React.useState(150);
   const [svs, setSvs] = React.useState(null);
   const [correct, setCorrect] = React.useState(false)
   const [score, setScore] = React.useState(null)
@@ -72,6 +72,7 @@ const Map = (props) => {
   const [inputValue, setInputValue] = React.useState("")
   const [scores, setScores] = React.useState([])
   const [double, setDouble] = React.useState(false);
+  const { increment, results } = useResults();
 
   const calcScore = (t) => (
     t > 135 ? 100 : parseInt(t / 1.35)
@@ -90,6 +91,10 @@ const Map = (props) => {
   }, [city])
 
   React.useEffect(() => {
+    setScores(results)
+  }, [results])
+
+  React.useEffect(() => {
     let interval = null;
     if (correct || timer < 1) {
       if (answers.length < 9) {
@@ -100,7 +105,7 @@ const Map = (props) => {
       setTotalScore(totalScore + score)
       setCorrect(false)
       setScore(null)
-      setTimer(100)
+      resetTimer(150)
     } else {
       interval = setInterval(() => {
         setTimer(timer => timer - 1);
@@ -108,19 +113,7 @@ const Map = (props) => {
     }
     if (answers.length === 10) {
       setPlaying(false)
-      async function increment(counter) {
-        const data = { name: 'anonymous', value: counter }
-        const endpoint = `${apiBase}/api/v1/counters/update`
-        const response = await makePostRequest(endpoint, data)
-        const result = await response.json()
-        try {
-          const newScores = [ ...scores, result].sort((a, b) => b.value - a.value).slice(0,10)
-          setScores(newScores)
-        } catch (error) {
-          console.log(error)
-        }
-      }
-      increment(totalScore)
+      increment(totalScore, scores)
       return clearInterval(interval)
     }
     return () => clearInterval(interval);
@@ -172,7 +165,10 @@ const Map = (props) => {
     })
   }
 
-  const resetTimer = () => (setTimer(0)) 
+  const resetTimer = (t) => {
+    setInputValue('')
+    setTimer(t)
+  }
 
   const onLoad = (streetViewService) => {
     setSvs(streetViewService);
@@ -213,7 +209,7 @@ const Map = (props) => {
             <button
               disabled={double}
               onClick={() => {
-                resetTimer()
+                resetTimer(0)
                 setDouble(true);
               }}
               >Skip</button>

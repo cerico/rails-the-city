@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export const apiBase = window.location.href
 
 function headers() {
@@ -14,6 +16,25 @@ export function makePostRequest(endPoint, data) {
     method: 'PUT',
     body: JSON.stringify(data),
   })
+}
+
+export default () => {
+  const [results, setResults] = useState([]);
+
+  const increment = async (score, scores) => {
+    const data = { name: 'anonymous', value: score }
+    const endpoint = `${apiBase}/api/v1/counters/update`
+    const response = await makePostRequest(endpoint, data)
+    const result = await response.json()
+    try {
+      const newScores = [ ...scores, result].sort((a, b) => b.value - a.value).slice(0,10)
+      console.log(newScores)
+      setResults(newScores)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  return { increment, results };
 }
 
 export async function increment(counter) {
