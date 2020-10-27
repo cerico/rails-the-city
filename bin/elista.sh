@@ -25,6 +25,7 @@ ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
     yarn install --check-files
     ./bin/webpack --mode production
     RAILS_ENV=production bundle exec rake db:migrate
+    sudo service nginx reload
   else
     git clone https://github.com/cerico/rails-the-city.git rails_city
     cd rails_city

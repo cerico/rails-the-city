@@ -66,6 +66,7 @@ ssh $user@$server -i $key << EOF
     yarn install --check-files
     ./bin/webpack --mode production
     RAILS_ENV=production bundle exec rake db:migrate
+    sudo service nginx reload
   else
     git clone $repo $app_name
     cd $app_name
