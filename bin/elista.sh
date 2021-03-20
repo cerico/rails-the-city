@@ -1,6 +1,6 @@
 source config/elista.env
 
-ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
+ssh deploy@207.180.194.212 << EOF
   cd /var/www/html
   echo rails_city
   bash -i
@@ -11,12 +11,12 @@ ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
     git pull origin main
     which ruby
     rbenv versions
-    if [ -d /home/deploy/.rbenv/versions/2.6.5 ]
+    if [ -d /home/deploy/.rbenv/versions/2.7.1 ]
       then
-      rbenv local 2.6.5
+      rbenv local 2.7.1
     else
-      rbenv install 2.6.5
-      rbenv local 2.6.5
+      rbenv install 2.7.1
+      rbenv local 2.7.1
     fi
     RAILS_ENV=production
     bundle config set without 'development test'
@@ -29,16 +29,16 @@ ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
   else
     git clone https://github.com/cerico/rails-the-city.git rails_city
     cd rails_city
-    if [ -d /home/deploy/.rbenv/versions/2.6.5 ]
+    if [ -d /home/deploy/.rbenv/versions/2.7.1 ]
       then
-      rbenv local 2.6.5
+      rbenv local 2.7.1
     else 
-      rbenv install 2.6.5
-      rbenv local 2.6.5
+      rbenv install 2.7.1
+      rbenv local 2.7.1
     fi
   fi
 EOF
-ssh -q deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy  "[[ -f /var/www/html/rails_city/config/master.key ]]"
+ssh -q deploy@heyu.larchtre.es  "[[ -f /var/www/html/rails_city/config/master.key ]]"
 retVal=$?
 echo 
 if [ $retVal -eq 0 ]; then
@@ -46,13 +46,13 @@ if [ $retVal -eq 0 ]; then
   exit
 fi
 ls
-sftp -i /Users/gareth/.ssh/deploy deploy@sv.larchtre.es << EOF
+sftp deploy@heyu.larchtre.es << EOF
   cd /var/www/html/rails_city/config
   mput config/master.key
   cd /etc/nginx/conf.d
   mput config/nginx/*
 EOF
-ssh deploy@sv.larchtre.es -i /Users/gareth/.ssh/deploy << EOF
+ssh deploy@heyu.larchtre.es << EOF
   bash -i
   cd /var/www/html/rails_city
   password=`echo 'Rails.application.credentials.production[:db_password]' | RAILS_ENV=production bundle exec rails c | tail -2 | head -1 | tr -d '"'`

@@ -72,7 +72,7 @@ const Map = (props) => {
   const [inputValue, setInputValue] = React.useState("")
   const [scores, setScores] = React.useState([])
   const [double, setDouble] = React.useState(false);
-  const { increment, results } = useResults();
+  const {increment, results} = useResults();
 
   const calcScore = (t) => (
     t > 135 ? 100 : parseInt(t / 1.35)
